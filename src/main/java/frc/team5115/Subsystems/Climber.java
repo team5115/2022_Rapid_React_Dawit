@@ -20,15 +20,16 @@ public class Climber extends SubsystemBase {
 
     public Climber(){
         servo = new Servo(0);
+        servo.setAngle(100);
 
     
     }
 
     public void startServo(){
-        servo.setAngle(100);
-    } 
+        servo.setAngle(10);
+        } 
     
     public void stopServo(){
-        servo.setAngle(0);
+        servo.setAngle(100);
     }
 }

@@ -38,7 +38,8 @@ public class RobotContainer {
         //new JoystickButton(joy, DC_MOTOR_BB1_ID).whenPressed(new InstantCommand(arm::Close));
 
         new JoystickButton(joy, SHOOTER_BUTTON_ID).whenHeld(new AdjustDriveCommandGroup(drivetrain, limelight));
-        new JoystickButton(joy, CLIMBER_UP_BUTTON_ID).whenPressed(new InstantCommand(climber::startServo));
+        new JoystickButton(joy, CLIMBER_UP_BUTTON_ID).whenHeld(new InstantCommand(climber::startServo)).whenReleased(new InstantCommand(climber::stopServo));
+        new JoystickButton(joy, WINCH_RELEASE_BUTTON_ID).whenHeld(new InstantCommand(climber::stopServo));
 
         //new JoystickButton(joy, SHOOTER_BUTTON_ID).whenHeld(new InstantCommand(shooter::shoot)).whenReleased(new InstantCommand(shooter::stopShoot));
         //new JoystickButton(joy, WINCH_BUTTON_ID).whenHeld(new InstantCommand(climber::StartWinch)).whenReleased(new InstantCommand(climber::StopClimb));
