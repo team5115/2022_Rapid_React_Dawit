@@ -30,7 +30,7 @@ public class AdjustDistance extends CommandBase {
         }
     @Override
         public boolean isFinished() {
-            if(Math.abs(drivetrain.getY()) < 0.01){
+            if(Math.abs(drivetrain.getDistance()) < 0.1){
                 return true;
             }
             else{

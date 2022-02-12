@@ -30,7 +30,7 @@ public class AdjustAngle extends CommandBase {
         }
     @Override
         public boolean isFinished() {
-            if(Math.abs(drivetrain.getX()) < 0.01){
+            if(Math.abs(drivetrain.getX()) < 0.1){
                 return true;
             }
             else{

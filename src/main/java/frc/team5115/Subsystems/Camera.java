@@ -15,11 +15,11 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
  
 
 
-public class Climber extends SubsystemBase {
+public class Camera extends SubsystemBase {
     Servo servo;
 
-    public Climber(){
-        servo = new Servo(0);
+    public Camera(){
+        servo = new Servo(1);
         servo.setAngle(100);
 
     
@@ -27,6 +27,7 @@ public class Climber extends SubsystemBase {
 
     public void startServo(){
         servo.setAngle(10);
+        System.out.print("ha");
         } 
     
     public void stopServo(){

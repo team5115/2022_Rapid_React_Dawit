@@ -23,15 +23,10 @@ public class AdjustAngleToBall extends CommandBase{
 
     @Override
         public void execute() {
-            drivetrain.AdjustAngleToBall();
+            drivetrain.AdjustAngleToBall2();
         }
     @Override
         public boolean isFinished() {
-            if(Math.abs(drivetrain.AngleA) < 0.01){
-                return true;
-            }
-            else{
-                return false;
-            }
+            return drivetrain.AdjustAngleToBallChecker();
         }
 }

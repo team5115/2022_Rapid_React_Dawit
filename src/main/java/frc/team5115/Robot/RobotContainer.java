@@ -13,12 +13,13 @@ import frc.team5115.Subsystems.*;
 import static frc.team5115.Constants.*;
 import frc.team5115.Robot.*;
 
+
 public class RobotContainer {
 
     public Drivetrain drivetrain;
     public final Shooter shooter = new Shooter();
     public final Intake intake = new Intake();
-    public final Climber climber = new Climber();
+    public final Camera camera = new Camera();
     //public final Feeder feeder = new Feeder();
     public final DriveForward DriveForward = new DriveForward(drivetrain);
     public final Joystick joy = new Joystick(0);
@@ -37,9 +38,8 @@ public class RobotContainer {
         //new JoystickButton(joy, DC_MOTOR_BB2_ID).whenPressed(new InstantCommand(arm::Open));
         //new JoystickButton(joy, DC_MOTOR_BB1_ID).whenPressed(new InstantCommand(arm::Close));
 
-        new JoystickButton(joy, SHOOTER_BUTTON_ID).whenHeld(new AdjustDriveCommandGroup(drivetrain, limelight));
-        new JoystickButton(joy, CLIMBER_UP_BUTTON_ID).whenHeld(new InstantCommand(climber::startServo)).whenReleased(new InstantCommand(climber::stopServo));
-        new JoystickButton(joy, WINCH_RELEASE_BUTTON_ID).whenHeld(new InstantCommand(climber::stopServo));
+        new JoystickButton(joy, 2).whenHeld(new AdjustDriveCommandGroup(drivetrain, limelight));
+        new JoystickButton(joy, 1).whenPressed(new InstantCommand(camera::startServo)).whenReleased(new InstantCommand(camera::stopServo));
 
         //new JoystickButton(joy, SHOOTER_BUTTON_ID).whenHeld(new InstantCommand(shooter::shoot)).whenReleased(new InstantCommand(shooter::stopShoot));
         //new JoystickButton(joy, WINCH_BUTTON_ID).whenHeld(new InstantCommand(climber::StartWinch)).whenReleased(new InstantCommand(climber::StopClimb));
@@ -74,7 +74,7 @@ public class RobotContainer {
         public void execute() {
            //drivetrain.MecanumSimpleDrive(joystick.getRawAxis(JOY_X_AXIS_ID), joystick.getRawAxis(JOY_Y_AXIS_ID), joystick.getRawAxis(JOY_Z_AXIS_ID));
            //drivetrain.DistanceDetectionRaw();
-           drivetrain.DistanceDetectionAverage();
+           //drivetrain.DistanceDetectionAverage();
         }
     }
 /*

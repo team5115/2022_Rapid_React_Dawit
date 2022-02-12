@@ -27,7 +27,7 @@ public class AdjustDriveCommandGroup extends SequentialCommandGroup {
         //Adjusts Angle
         new AdjustAngle(drivetrain, limelight),
 
-       //new AdjustDistance(drivetrain, limelight),
+       new AdjustDistance(drivetrain, limelight),
 
         new Stop(drivetrain));
         

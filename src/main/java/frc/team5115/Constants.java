@@ -1,3 +1,4 @@
+
 package frc.team5115;
 
 public class Constants{
@@ -8,11 +9,11 @@ public class Constants{
     public static final int startingAngle = -45; //90 is looking away from the driver stations.
 
     public static final double AUTO_MAX_THROTTLE = 0.3;
-    public static final double AUTO_CAMERA_HEIGHT = 40.5; //units: centimeters.
-    public static final double AUTO_CAMERA_ANGLE = 0; //units: degrees.
+    public static final double AUTO_CAMERA_HEIGHT = 25; //units: centimeters.
+    public static final double AUTO_CAMERA_ANGLE = 60; //units: degrees.
     public static final double AUTO_SHOOTIN_DISTANCE = 120; //units: inches. todome update
-    public static final double AUTO_HIGH_GOAL_HEIGHT = 40.5; //units: centimeters (temporary).
-    public static final double HUB_DISTANCE = 89.5; //units: centimeters.
+    public static final double AUTO_HIGH_GOAL_HEIGHT = 272; //units: centimeters (temporary).
+    public static final double HUB_DISTANCE = 200; //units: centimeters.
 
     //motor ids
     public static final byte FRONT_LEFT_MOTOR_ID = 1;
@@ -39,7 +40,7 @@ public class Constants{
     public static final byte SHOOTER_BUTTON_ID = 1;
     public static final byte AUTO_BALL_TARCKING = 7;
     public static final byte AUTO_TURN_BUTTON_ID = 8;
-    public static final byte WINCH_RELEASE_BUTTON_ID = 9;
+    public static final byte WINCH_RELEASE_BUTTON_ID = 2;
 
 
 
@@ -51,13 +52,13 @@ public class Constants{
     public static final double FEEDER_FLUSH_SPEED = -0.8;
     public static final double INTAKE_INHALE_SPEED = -0.3;
     public static final double  ARM_IDLE_SPEED = 0.15;
-    public static final double kD = 0.037;
+    public static final double kD = 0.1;
     public static final double hD = 0.044;
     public static final double bA = 10;
     public static final double MaxArea = 0.1;
     public static final double kA = 0.1;
     public static final double ULTRASONIC_UNIT_CONVERSION = (10000/45.927);
-    public static final double D1 = 1; //units centimeter, distance from one ultrasonic to the other
+    public static final double D1 = 20; //units centimeter, distance from one ultrasonic to the other
     //(5.0/10240);
     
 

@@ -27,7 +27,7 @@ public class AdjustDistanceToBall extends CommandBase{
         }
     @Override
         public boolean isFinished() {
-            if(Math.abs(drivetrain.distancefromrobot) < 0.01){
+            if(Math.abs(drivetrain.distancefromrobot) < 0.1){
                 return true;
             }
             else{

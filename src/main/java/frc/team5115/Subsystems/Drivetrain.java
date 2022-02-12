@@ -40,15 +40,20 @@ public class Drivetrain extends SubsystemBase{
     public double AverageDistanceDetector2;
     public double distancefromrobot;
     public double AngleA;
- 
+    public boolean DistanceDetector1Present; 
+    public boolean DistanceDetector2Present;
+
     public Drivetrain(RobotContainer x) {
         frontLeft = new TalonSRX(FRONT_LEFT_MOTOR_ID);
         frontRight = new TalonSRX(FRONT_RIGHT_MOTOR_ID);
         backLeft = new TalonSRX(BACK_LEFT_MOTOR_ID);
         backRight = new TalonSRX(BACK_RIGHT_MOTOR_ID);
 
-        DistanceDetector1 = new AnalogInput(0);
-        DistanceDetector2 = new AnalogInput(1);
+        DistanceDetector1 = new AnalogInput(1);
+        DistanceDetector2 = new AnalogInput(2);
+        DistanceDetector1Present = false;
+        DistanceDetector2Present = false;
+
         
         AverageDistanceDetector1 = 0;
         AverageDistanceDetector2 = 0;
@@ -68,7 +73,9 @@ public class Drivetrain extends SubsystemBase{
         AverageDistanceDetector1 = DistanceDetector1.getVoltage()*10000;
         AverageDistanceDetector2 = DistanceDetector2.getVoltage()*10000;
 
-        System.out.println("untrasonic:    " + AverageDistanceDetector1);
+        System.out.println("untrasonic1:    " + AverageDistanceDetector1);
+        System.out.println("untrasonic2:    " + AverageDistanceDetector2);
+
 
         DistanceAndAngleFromRobot();
     }
@@ -91,11 +98,24 @@ public class Drivetrain extends SubsystemBase{
         AverageDistanceDetector1 = f;
         AverageDistanceDetector2 = q;
 
-        System.out.println("untrasonic:    " + AverageDistanceDetector1);
+        if(DistanceDetector1.getVoltage()<15000){
+            DistanceDetector1Present = true;
+            
+        }
+        if(DistanceDetector2.getVoltage()<15000){
+            DistanceDetector2Present = true;
+            
+        }
+
+        System.out.println("untrasonic1:    " + AverageDistanceDetector1);
+        System.out.println("untrasonic2:    " + AverageDistanceDetector2);
+
 
         DistanceAndAngleFromRobot();
 
     }
+
+
 
     public void AdjustAngle(){
         NetworkTable networkTableInstance = NetworkTableInstance.getDefault().getTable("limelight");
@@ -108,20 +128,20 @@ public class Drivetrain extends SubsystemBase{
             double dectector = tv.getDouble(0);
             if(dectector == 1){
                 if(xangle > 0){
-                rightSpd = xangle*kD;
-                leftSpd = -rightSpd;
-                frontLeft.set(ControlMode.PercentOutput, -rightSpd);
-                frontRight.set(ControlMode.PercentOutput, -rightSpd);
-                backLeft.set(ControlMode.PercentOutput, 0);
-                backRight.set(ControlMode.PercentOutput, 0);
+                    rightSpd = xangle*kD;
+                    leftSpd = -rightSpd;
+                    frontLeft.set(ControlMode.PercentOutput, -rightSpd);
+                    frontRight.set(ControlMode.PercentOutput, -rightSpd);
+                    backLeft.set(ControlMode.PercentOutput, 0);
+                    backRight.set(ControlMode.PercentOutput, 0);
             }
             else{
-                leftSpd = -xangle*kD;
-                rightSpd = leftSpd;
-                frontLeft.set(ControlMode.PercentOutput,  rightSpd);
-                frontRight.set(ControlMode.PercentOutput, rightSpd);
-                backLeft.set(ControlMode.PercentOutput, 0);
-                backRight.set(ControlMode.PercentOutput, 0);  
+                    leftSpd = -xangle*kD;
+                    rightSpd = leftSpd;
+                    frontLeft.set(ControlMode.PercentOutput,  rightSpd);
+                    frontRight.set(ControlMode.PercentOutput, rightSpd);
+                    backLeft.set(ControlMode.PercentOutput, 0);
+                    backRight.set(ControlMode.PercentOutput, 0);  
             }
         }
             //else{
@@ -130,9 +150,49 @@ public class Drivetrain extends SubsystemBase{
     }
 
     public void DistanceAndAngleFromRobot(){
-        distancefromrobot = ((AverageDistanceDetector1*AverageDistanceDetector1)/2+D1*D1/4+(AverageDistanceDetector2*AverageDistanceDetector2)/2);
-        double CosOfA = (((distancefromrobot*distancefromrobot)+(D1*D1)/4+-(AverageDistanceDetector2*AverageDistanceDetector2))/(distancefromrobot*D1));
-        AngleA = Math.acos(CosOfA);
+        distancefromrobot = Math.sqrt((AverageDistanceDetector1*AverageDistanceDetector1)/2-D1*D1/4+(AverageDistanceDetector2*AverageDistanceDetector2)/2);
+        double CosOfA = Math.sqrt(((distancefromrobot*distancefromrobot)+(D1*D1)/4+-(AverageDistanceDetector2*AverageDistanceDetector2))/(distancefromrobot*D1));
+        AngleA = Math.acos(CosOfA);     
+
+        System.out.println("distance:" + distancefromrobot);
+        //System.out.println(AngleA);
+
+    }
+
+    public boolean AdjustAngleToBallChecker(){
+        if (DistanceDetector1Present == true && DistanceDetector2Present == true){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public void AdjustAngleToBall2(){
+        if(DistanceDetector1Present == true && DistanceDetector2Present == false){
+            frontLeft.set(ControlMode.PercentOutput, 0.5);
+            frontRight.set(ControlMode.PercentOutput, -0.5);
+            backLeft.set(ControlMode.PercentOutput, 0);
+            backRight.set(ControlMode.PercentOutput, 0);
+        }
+        if(DistanceDetector1Present == true && DistanceDetector2Present == true){
+            frontLeft.set(ControlMode.PercentOutput, 0);
+            frontRight.set(ControlMode.PercentOutput, 0);
+            backLeft.set(ControlMode.PercentOutput, 0);
+            backRight.set(ControlMode.PercentOutput, 0);
+        }
+        if(DistanceDetector1Present == false && DistanceDetector2Present == false){
+            frontLeft.set(ControlMode.PercentOutput, -0.5);
+            frontRight.set(ControlMode.PercentOutput, 0.5);
+            backLeft.set(ControlMode.PercentOutput, 0);
+            backRight.set(ControlMode.PercentOutput, 0);
+        }
+        if(DistanceDetector1Present == false && DistanceDetector2Present == false){
+            frontLeft.set(ControlMode.PercentOutput, 0.5);
+            frontRight.set(ControlMode.PercentOutput, -0.5);
+            backLeft.set(ControlMode.PercentOutput, 0);
+            backRight.set(ControlMode.PercentOutput, 0);
+        }
 
     }
 
@@ -177,16 +237,16 @@ public class Drivetrain extends SubsystemBase{
         double yangle = ty.getDouble(0); 
         double dectector = tv.getDouble(0);
         if(dectector == 1){
-        d = (AUTO_HIGH_GOAL_HEIGHT - AUTO_CAMERA_HEIGHT) / tan(toRadians(yangle + AUTO_CAMERA_ANGLE));
-        if(d> HUB_DISTANCE){
+            d = (AUTO_HIGH_GOAL_HEIGHT - AUTO_CAMERA_HEIGHT) / tan(toRadians(yangle + AUTO_CAMERA_ANGLE));
+            if(d> HUB_DISTANCE){
        
-            leftSpd = (d-HUB_DISTANCE)*hD;
-            rightSpd = (d - HUB_DISTANCE)*hD;
-        }
-        else{
-            leftSpd = (HUB_DISTANCE - d)*hD;
-            rightSpd = (HUB_DISTANCE - d)*hD;
-        }
+                leftSpd = (d-HUB_DISTANCE)*hD;
+                rightSpd = (d - HUB_DISTANCE)*hD;
+         }
+            else{
+                leftSpd = (HUB_DISTANCE - d)*hD;
+                rightSpd = (HUB_DISTANCE - d)*hD;
+            }
         frontLeft.set(ControlMode.PercentOutput, leftSpd);
         frontRight.set(ControlMode.PercentOutput, rightSpd);
         backLeft.set(ControlMode.PercentOutput, leftSpd);
@@ -288,14 +348,15 @@ public class Drivetrain extends SubsystemBase{
             return tx.getDouble(0);
     }
    
-    public double getY(){
+    public double getDistance(){
         NetworkTable networkTableInstance = NetworkTableInstance.getDefault().getTable("limelight");
             NetworkTableEntry tx = networkTableInstance.getEntry("tx");
             NetworkTableEntry ty = networkTableInstance.getEntry("ty");
             NetworkTableEntry tv = networkTableInstance.getEntry("tv");
             NetworkTableEntry ta = networkTableInstance.getEntry("ta");
-
-            return ty.getDouble(0);
+            double tt = ty.getDouble(0);
+            d = (AUTO_HIGH_GOAL_HEIGHT - AUTO_CAMERA_HEIGHT) / tan(toRadians(tt + AUTO_CAMERA_ANGLE));
+            return Math.abs(d - HUB_DISTANCE);
     }
 
     public void ballAdjustAngle(){
@@ -354,4 +415,6 @@ public class Drivetrain extends SubsystemBase{
     backLeft.set(ControlMode.PercentOutput, leftSpd);
     backRight.set(ControlMode.PercentOutput, rightSpd);
     }
+
     }
+    
