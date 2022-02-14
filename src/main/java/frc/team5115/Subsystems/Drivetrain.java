@@ -27,22 +27,24 @@ public class Drivetrain extends SubsystemBase{
     private AnalogInput DistanceDetector2;
  
    
- 
+    //mecanum speed values 
     private double frontLeftSpeed;
     private double frontRightSpeed;
     private double backLeftSpeed;
     private double backRightSpeed;
  
+    //tank speed values 
     private double rightSpd;
     private double leftSpd;
+
     public double d;
+
+    //ultrasonic detector 
     public double AverageDistanceDetector1;
     public double AverageDistanceDetector2;
+
     public double distancefromrobot;
     public double AngleA;
-
-    public double angleAdjusted;
-    public double detectorTV;
  
     public Drivetrain(RobotContainer x) {
         frontLeft = new TalonSRX(FRONT_LEFT_MOTOR_ID);
@@ -67,15 +69,17 @@ public class Drivetrain extends SubsystemBase{
         tankDrive(0, 0, 0);
     }
 
+    //gets raw values from ultrasonics 
     public void distanceDetectionRaw(){
         AverageDistanceDetector1 = DistanceDetector1.getVoltage()*10000;
         AverageDistanceDetector2 = DistanceDetector2.getVoltage()*10000;
 
-        System.out.println("untrasonic:    " + AverageDistanceDetector1);
+        System.out.println("ultrasonic:    " + AverageDistanceDetector1);
 
         distanceAndAngleFromRobot();
     }
 
+    //averages values from ultrasonics
     public void distanceDetectionAverage(){
         double n = 5000;
         double f = 0;
@@ -94,13 +98,14 @@ public class Drivetrain extends SubsystemBase{
         AverageDistanceDetector1 = f;
         AverageDistanceDetector2 = q;
 
-        System.out.println("untrasonic:    " + AverageDistanceDetector1);
+        System.out.println("ultrasonic:    " + AverageDistanceDetector1);
 
         distanceAndAngleFromRobot();
 
     }
 
-    public void AdjustAngle(){
+
+    public void adjustAngle(){
         NetworkTable networkTableInstance = NetworkTableInstance.getDefault().getTable("limelight");
         NetworkTableEntry tx = networkTableInstance.getEntry("tx");
         NetworkTableEntry tv = networkTableInstance.getEntry("tv");
@@ -159,7 +164,7 @@ public class Drivetrain extends SubsystemBase{
         setTankSpd();
     }
 
-    public void adjustDistance(){
+    public void adjustDistanceToHub(){
         NetworkTable networkTableInstance = NetworkTableInstance.getDefault().getTable("limelight");
         NetworkTableEntry ty = networkTableInstance.getEntry("ty");
         NetworkTableEntry tv = networkTableInstance.getEntry("tv");
@@ -318,4 +323,23 @@ public class Drivetrain extends SubsystemBase{
         backLeft.set(ControlMode.PercentOutput, leftSpd);
         backRight.set(ControlMode.PercentOutput, rightSpd);
     }
+
+    public void adjustAngle(double angle){
+        angleAdjusted = angle;
+        if(angleAdjusted > 0){
+            rightSpd = (angleAdjusted)*kD;
+            leftSpd = -rightSpd;
+            frontLeft.set(ControlMode.PercentOutput, -rightSpd);
+            frontRight.set(ControlMode.PercentOutput, -rightSpd);
+            backLeft.set(ControlMode.PercentOutput, 0);
+            backRight.set(ControlMode.PercentOutput, 0);
+        }
+        else{
+            leftSpd = -(angleAdjusted)*kD;
+            rightSpd = leftSpd;
+            frontLeft.set(ControlMode.PercentOutput, rightSpd);
+            frontRight.set(ControlMode.PercentOutput, rightSpd);
+            backLeft.set(ControlMode.PercentOutput, 0);
+            backRight.set(ControlMode.PercentOutput, 0);
+        }
 }

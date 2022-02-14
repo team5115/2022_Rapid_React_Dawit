@@ -111,12 +111,12 @@ public class Mecanum extends SubsystemBase{
         }
     }
 
-    public void debug() {
+    //public void debug() {
 //        System.out.println(frontLeft.getSelectedSensorPosition());
 //        System.out.println(frontRight.getSelectedSensorPosition());
 //        System.out.println(backLeft.getSelectedSensorPosition());
 //        System.out.println(backRight.getSelectedSensorPosition());
-    }
+    //}
 
     private void normalize(double[] wheelSpeeds) {
         double maxMagnitude = Math.abs(wheelSpeeds[0]);

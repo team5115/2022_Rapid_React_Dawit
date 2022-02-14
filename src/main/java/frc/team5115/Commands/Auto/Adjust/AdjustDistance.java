@@ -26,7 +26,7 @@ public class AdjustDistance extends CommandBase {
 
     @Override
         public void execute() {
-            drivetrain.AdjustDistance();
+            drivetrain.adjustDistanceToHub();
         }
     @Override
         public boolean isFinished() {
