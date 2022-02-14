@@ -1,4 +1,4 @@
-package frc.team5115.Commands.Auto.Adjust;
+package frc.team5115.Commands.Auto.NewAuto.Adjust;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.Joystick;
@@ -12,7 +12,6 @@ import frc.team5115.Commands.Auto.DriveForward;
 import frc.team5115.Subsystems.*;
 import static frc.team5115.Constants.*;
 import frc.team5115.Robot.*;
-import frc.team5115.Commands.*;
 
 public class AdjustDriveCommandGroup extends SequentialCommandGroup {
         Limelight limelight;
