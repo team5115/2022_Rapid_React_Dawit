@@ -1,5 +1,6 @@
 package frc.team5115.Commands.Auto.NewAuto;
 import frc.team5115.Commands.Intake.*;
+import frc.team5115.Commands.Shooter.AllShoot;
 import frc.team5115.Commands.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team5115.Commands.Auto.NewAuto.Adjust.AdjustDriveCommandGroup;
@@ -26,7 +27,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
             new IntakeBall(),
             //asjust to shoot
             new AdjustDriveCommandGroup(drivetrain, limelight),
-            new Shoot(intake, feeder, shooter)
+            new AllShoot(intake, feeder, shooter)
         );
     }
 

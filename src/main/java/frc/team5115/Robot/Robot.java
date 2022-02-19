@@ -7,27 +7,12 @@ import frc.team5115.Subsystems.*;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends TimedRobot {
-    public Drivetrain drivetrain;
-    public Intake intake;
-    public Shooter shooter;
-    public Camera camera;
-    public Feeder feeder;
-    public Climber climber;
-    public Limelight limelight; 
+    
     private RobotContainer robotContainer;
-
-    public Robot(){
-      drivetrain = new Drivetrain();
-      limelight = new Limelight();
-      intake = new Intake();
-      shooter = new Shooter();
-      feeder = new Feeder();
-      climber = new Climber();
-      camera = new Camera();
-    }
 
     @Override
     public void robotInit() {
+        
         robotContainer = new RobotContainer();
     }
 
@@ -46,7 +31,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        new AutoCommandGroup(drivetrain, limelight, intake, feeder, shooter);
+        //new AutoCommandGroup(drivetrain, limelight, intake, feeder, shooter);
     }
 
 

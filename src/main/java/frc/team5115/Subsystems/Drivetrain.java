@@ -44,12 +44,14 @@ public class Drivetrain extends SubsystemBase{
     public double distanceFromHub;
     public double averageDistanceDetector1;
     public double distancefromrobot;
-    public double AngleA;
+    public double angleA;
     private AnalogInput distanceDetector1;
-    private AnalogInput distanceDecector2;
+    private AnalogInput distanceDetector2;
     public boolean distanceDetector1Present; 
-    public boolean distanceDecector2Present;
+    public boolean distanceDetector2Present;
     public boolean ballFullyDetected;
+
+    public boolean foundBall = false;
 
     
     public Drivetrain() {
@@ -58,14 +60,14 @@ public class Drivetrain extends SubsystemBase{
         backLeft = new TalonSRX(BACK_LEFT_MOTOR_ID);
         backRight = new TalonSRX(BACK_RIGHT_MOTOR_ID);
 
-       // gyro= new AHRS(SPI.Port.kMXP);
+       gyro= new AHRS(SPI.Port.kMXP);
         //encoder = new Encoder(1,1);
        // encoder.reset();
-       // gyro.resetDisplacement();
+        gyro.resetDisplacement();
 
         distanceDetector1 = new AnalogInput(0);
         distanceDetector1Present = false; 
-        distanceDecector2Present = false;
+        distanceDetector2Present = false;
         ballFullyDetected = false;
 
         averageDistanceDetector1 = 0;
@@ -81,6 +83,11 @@ public class Drivetrain extends SubsystemBase{
         plugAndChugDrive(0, 0, 0, 0);
     }
 
+    public void resetGyro(){
+        gyro.reset();
+        System.out.println("reset navx coordinates");
+    }
+
     public void TankDrive(double x, double y, double throttle) { 
         leftSpd = (x-y) * throttle;
         rightSpd = (x+y) * throttle;
@@ -88,10 +95,10 @@ public class Drivetrain extends SubsystemBase{
     }
 
     public void MecanumSimpleDrive(double y, double x, double z) {
-        frontLeftSpeed = (-x + y + z);
-        backLeftSpeed = (-x + y - z);
-        frontRightSpeed = (x +  y + z);
-        backRightSpeed = (x + y - z);
+        frontLeftSpeed = (-x + y + z)*.5;
+        backLeftSpeed = (-x + y - z)*.5;
+        frontRightSpeed = (x +  y + z)*.5;
+        backRightSpeed = (x + y - z)*.5;
 
         plugAndChugDrive(frontLeftSpeed, frontRightSpeed, backLeftSpeed, backRightSpeed);
     }
@@ -100,8 +107,8 @@ public class Drivetrain extends SubsystemBase{
         double x;
         double y;
         double pi = 3.1415926;
-       // float gyro_degrees = gyro.getYaw();
-        double gyro_degrees = 0.5123;
+       float gyro_degrees = gyro.getYaw();
+        //double gyro_degrees = 0.5123;
         double gyro_radians = gyro_degrees * pi/180; 
 
         x = strafe*Math.cos(gyro_radians) + fwd*Math.sin(gyro_radians);
@@ -112,6 +119,7 @@ public class Drivetrain extends SubsystemBase{
         frontRightSpeed = (-y + x + rotate);
         backRightSpeed = (-y - x + rotate);
 
+        System.out.println("gyro degrees " + gyro_degrees);
         plugAndChugDrive(frontLeftSpeed, frontRightSpeed, backLeftSpeed, backRightSpeed);
     }
 
@@ -145,34 +153,24 @@ public class Drivetrain extends SubsystemBase{
     }
 
     public void distanceDetectionAverage(){
-        double n = 5000;
+        double n = 1000;
         double f = 0;
 
         for(int i = 0; i< n; i++){
             double j = distanceDetector1.getVoltage()*ULTRASONIC_UNIT_CONVERSION;
             f = f + j;
-            
         }
+
         f = f/n;
         averageDistanceDetector1 = f;
         distancefromrobot = averageDistanceDetector1;
+        System.out.println(averageDistanceDetector1);
 
-        if(distanceDetector1.getVoltage()<15000){
-            distanceDetector1Present = true;
-        }
-        else{
-            distanceDetector1Present = false;
-        }
-        if(distanceDecector2.getAccumulatorCount()<15000){
-            distanceDecector2Present = true;
-        }
-        else{
-            distanceDecector2Present = false;
-        }
+       
     }
 
     public void encoder(){
-        Encoder codeMonkey = new Encoder(0,1);
+        Encoder codeMonkey = new Encoder(0,1, false, Encoder.EncodingType.k2X);
         System.out.println(codeMonkey.getRate());
     }
 
@@ -188,28 +186,29 @@ public class Drivetrain extends SubsystemBase{
         if(distanceDetector1Present == false){
             timer.reset();
             if(timer.get()<2){
-                if (distanceDecector2Present == false){
-                    a = false;
-                    plugAndChugDrive(-0.5, 0.5, 0, 0);
-                }
-                else{
-                    a = true;
-                    plugAndChugDrive( 0.5, -0.5, 0, 0);
-                }
-            }
-            else{
-                if(a == false){
-                    plugAndChugDrive( 0.5, -0.5, 0, 0);
+            //     if(distanceDetector2Present == false){
+            //         a = false;
+            //         plugAndChugDrive(-0.5, 0.5, 0, 0);
+            //     }
+            //     else{
+            //         a = true;
+            //         plugAndChugDrive( 0.5, -0.5, 0, 0);
+            //     }
+            // }
+            // else{
+            //     if(a == false){
+            //         plugAndChugDrive( 0.5, -0.5, 0, 0);
 
-                }
-                else{
-                    plugAndChugDrive(-0.5, 0.5, 0, 0);   
-                }
+            //     }
+            //     else{
+                     plugAndChugDrive(-0.5, 0.5, 0, 0);  
+                //while(distanceDetector2Present == false){ //andy code 
+                //    plugAndChugDrive(-0.5, 0.5, 0, 0);
+                //}
+            }
         }
             ballFullyDetected = false;
         }
-
-    }
     // scan left 10 degrees, then left 
     // spit out wrong color
     // do timer to stop moving  in the case that the color sensor doesnt pick up

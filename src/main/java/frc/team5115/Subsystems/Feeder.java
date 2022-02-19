@@ -8,14 +8,14 @@ import static frc.team5115.Constants.*;
 
 public class Feeder extends SubsystemBase{
     private TalonSRX feeder;
-    private double feederSpeed = 0.5;
+    private double feederSpeed = 1;
 
     public Feeder(){
         feeder = new TalonSRX(FEEDER_MOTOR_ID);
     }
 
     public void forwardFeeder(){
-       //feeder.set(ControlMode.PercentOutput, feederSpeed);
+       feeder.set(ControlMode.PercentOutput, feederSpeed);
     }
 
     public void reverseFeeder(){

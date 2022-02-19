@@ -9,7 +9,7 @@ import static frc.team5115.Constants.*;
 public class Shooter {
     private TalonSRX leftShooter;
     private TalonSRX rightShooter;
-    private double shootSpeed = 0.5;
+    private double shootSpeed = 1;
 
     public Shooter(){
         leftShooter = new TalonSRX(LEFT_SHOOTER_MOTOR_ID);
